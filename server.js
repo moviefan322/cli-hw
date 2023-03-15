@@ -180,9 +180,22 @@ const addEmployee = () => {
       message: "What is employee's last name?",
     },
     {
-      type: "input",
+      type: "list",
+      message: "What is the employee's role?",
       name: "role_id",
-      message: "What is the employees role (use role_id)?",
+      choices: [
+        { name: "Head of Sales", value: 1 },
+        { name: "Junior Sales Rep", value: 2 },
+        { name: "Head Manager", value: 3 },
+        { name: "Junior Manager", value: 4 },
+        { name: "Human Wrangler", value: 5 },
+        { name: "Assisstant", value: 6 },
+        { name: "Head of Services", value: 7 },
+        { name: "Junior Salesperson", value: 8 },
+        { name: "Head Deployer", value: 9 },
+        { name: "Head Lawyer", value: 10 },
+        { name: "Junior Lawyer", value: 11 },
+      ],
     },
     {
       type: "input",
@@ -202,6 +215,63 @@ const addEmployee = () => {
         }
       );
     });
+};
+
+const updateEmployeeRole = () => {
+  db.query(
+    `SELECT employee.id, CONCAT(employee.first_name, ' ', employee.last_name) AS employee_name, role.title 
+        FROM employee 
+        JOIN role ON employee.role_id = role.id`,
+    (err, results) => {
+      if (err) throw err;
+      // Convert the results into an array of choices for the prompt
+      const employeeChoices = results.map((result) => ({
+        name: result.employee_name,
+        value: result.id,
+        role: result.title,
+      }));
+      // Prompt the user to select an employee to update
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            message: "Which employee would you like to update?",
+            name: "employee_id",
+            choices: employeeChoices,
+          },
+          {
+            type: "list",
+            message: "What is the employee's new role?",
+            name: "role_id",
+            choices: [
+              { name: "Head of Sales", value: 1 },
+              { name: "Junior Sales Rep", value: 2 },
+              { name: "Head Manager", value: 3 },
+              { name: "Junior Manager", value: 4 },
+              { name: "Human Wrangler", value: 5 },
+              { name: "Assisstant", value: 6 },
+              { name: "Head of Services", value: 7 },
+              { name: "Junior Salesperson", value: 8 },
+              { name: "Head Deployer", value: 9 },
+              { name: "Head Lawyer", value: 10 },
+              { name: "Junior Lawyer", value: 11 },
+            ],
+          },
+        ])
+        .then((answers) => {
+          // Update the employee's role in the database
+          db.query(
+            "UPDATE employee SET role_id = ? WHERE id = ?",
+            [answers.role_id, answers.employee_id],
+            (err) => {
+              if (err) throw err;
+              console.log("Employee role updated successfully!");
+              displayEmployees();
+            }
+          );
+        });
+    }
+  );
 };
 
 const init = () => {
