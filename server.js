@@ -152,13 +152,14 @@ const addRole = () => {
           "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
           [title, salary, department_id],
           (err, role) => {
+            if (err) throw err;
+            console.log(`\n${title} added to the database!\n`);
             displayRoles();
           }
         );
       });
   });
 };
-
 const addEmployee = () => {
   db.query(
     `SELECT role.id, role.title, department.name as department_name
