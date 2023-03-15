@@ -32,7 +32,8 @@ const displayDepartments = () => {
       switch (choice) {
         case "Return to main menu":
           return init();
-        case "exit":
+        case "Exit":
+          db.end(); // Close the connection before exiting
           process.exit(1);
       }
     });
@@ -55,7 +56,8 @@ const displayRoles = () => {
       switch (choice) {
         case "Return to main menu":
           return init();
-        case "exit":
+        case "Exit":
+          db.end(); // Close the connection before exiting
           process.exit(1);
       }
     });
@@ -78,7 +80,8 @@ const displayEmployees = () => {
       switch (choice) {
         case "Return to main menu":
           return init();
-        case "exit":
+        case "Exit":
+          db.end(); // Close the connection before exiting
           process.exit(1);
       }
     });
@@ -100,23 +103,6 @@ const addDepartment = () => {
         displayDepartments();
       }
     );
-
-    const optionsTwo = {
-      type: "list",
-      message: "What next?",
-      name: "choice",
-      choices: ["Return to main menu", "Exit"],
-    };
-
-    inquirer.prompt(optionsTwo).then(({ choice }) => {
-      console.log(choice);
-      switch (choice) {
-        case "Return to main menu":
-          return init();
-        case "Exit":
-          process.exit(1);
-      }
-    });
   });
 };
 
@@ -163,8 +149,8 @@ const addRole = () => {
 const addEmployee = () => {
   db.query(
     `SELECT role.id, role.title, department.name as department_name
-        FROM role
-        JOIN department ON role.department_id = department.id`,
+          FROM role
+          JOIN department ON role.department_id = department.id`,
     (err, results) => {
       if (err) throw err;
       // Convert the results into an array of choices for the prompt
@@ -205,7 +191,7 @@ const addEmployee = () => {
           db.query(
             "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
             [first_name, last_name, role_id, manager_id],
-            (err, result) => {
+            (err, employee) => {
               if (err) throw err;
               console.log(
                 `\n${first_name} ${last_name} added to the database!\n`

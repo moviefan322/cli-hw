@@ -27,6 +27,7 @@ The program is run in the CLI. First, copy the repo, then open it in VS code
 ## Usage
 
 Once you have downloaded the code and opened it in a code editor, start the cli by typing 'node server' into the terminal
+Here is a video illustrating the apps usage: https://drive.google.com/file/d/1VgKvS4ooWJ_63FkiK8zEMsMlPBvViefr/view
 
 ![Screenshot of webpage](./assets/images/screenshot.png)
 
